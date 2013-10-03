@@ -1,0 +1,74 @@
+<h1><?php echo $this->__('Our Brands') ?></h1>
+<?php
+$_brands = array();
+// separate all the brands to alphabets and featured brands
+foreach($this->getBrands() as $brand){
+    $key = substr(strtolower($brand['manufacturer']), 0, 1);
+    $_brands[$key][] = $brand;
+
+    if($brand['featured']){
+        $featured[] = $brand;
+    }
+}
+
+// here we can display featured brands first
+if(isset($featured)){ ?>
+    <h3><?php echo $this->__('Featured Brands') ?></h3>
+    <div class="featured">
+        <ul class="featured">
+            <?php foreach($featured as $v): ?>
+            <li>
+                <div class="brand-image">
+                    <a class="brand_logo_featured" href="<?php echo $this->getUrl() . $v['url_key'] ?>">
+                        <?php if(!empty($v['logo_large'])): ?>
+                        <img src="<?php echo Mage::getBaseUrl('media') . $v['logo_large'] ?>" alt="<?php echo $this->htmlEscape($v['title']) ?>" border="0" />
+                        <?php else: ?>
+                            <?php echo $v['title'] ?>
+                        <?php endif ?>
+                    </a>
+                </div>
+            </li>
+            <?php endforeach ?>
+        </ul>
+    </div>
+    <?php
+}
+$alphabets = array_keys($_brands);
+?>
+<div class="brand_alphabets">
+    <ul class="brand_jump_nav">
+        <?php foreach (range('a', 'z') as $char): ?>
+          <?php $class = (isset($_brands[$char]) ? 'active' : '') ?>
+          <li class="<?php echo $class ?>">
+              <?php if($class): ?>
+                <a href="#<?php echo $char ?>"><?php echo $char ?></a>
+              <?php else: ?>
+                  <?php echo $char ?>
+              <?php endif ?>
+          </li>
+        <?php endforeach ?>
+    </ul>
+</div>
+
+<div class="brands-list">
+<?php
+// now let's display all brands
+foreach($_brands as $k => $v): ?>
+    <div>
+    <span><a name="<?php echo $k ?>"><?php echo $k ?></a></span>
+    <ul class="brands-list-row">
+        <?php foreach($v as $brand): ?>
+        <li>
+            <a class="brand_logos" href="<?php echo $this->getUrl() . $brand['url_key'] ?>">
+                <?php if(!empty($brand['logo_medium'])): ?>
+                <img src="<?php echo Mage::getBaseUrl('media') . $brand['logo_medium'] ?>" alt="<?php echo $this->htmlEscape($brand['title']) ?>" border="0" />
+                <?php else: ?>
+                    <?php echo $brand['title'] ?>
+                <?php endif ?>
+            </a>
+        </li>
+        <?php endforeach ?>
+    </ul>
+    </div>
+<?php endforeach ?>
+</div>

@@ -1,0 +1,64 @@
+.brand_alphabets{}
+.brand_alphabets ul.brand_jump_nav{
+    clear: both;
+    display: block;
+    overflow: hidden;
+    border-bottom: 1px solid #999;
+    padding: 0 0 2px 0;
+    margin: 0 0 10px 0;
+}
+.brand_alphabets ul.brand_jump_nav li {
+text-transform: uppercase;
+float: left;
+width: 18px;
+font-weight: bold;
+text-decoration: none;
+color: #666;
+font-size: 14px;
+}
+.brand_alphabets ul.brand_jump_nav li.active a {
+text-decoration: none;
+}
+.brand_alphabets ul.brand_jump_nav li.active a:hover {
+color: #0A263C;
+}
+
+
+.brands-list {
+clear: both;
+overflow: hidden;
+margin: 0 0 20px 0;
+}
+.brands-list div {
+clear: both;
+overflow: hidden;
+display: block;
+margin: 0 0 20px 0;
+padding: 0 0 5px 20px;
+border-bottom: 1px solid #DEDEDE;
+position: relative;
+}
+.brands-list div span {
+position: absolute;
+top: 0;
+left: 0;
+}
+.brands-list div span a {
+text-decoration: none;
+font-weight: bold;
+font-size: 20px;
+text-transform: uppercase;
+line-height: 80px;
+}
+.brands-list div ul.brands-list-row{}
+.brands-list div ul.brands-list-row li {
+float: left;
+width: 100px;
+height: 80px;
+padding: 0 25px;
+display: block;
+text-align: center;
+line-height: 80px;
+}
+.brands-list div ul.brands-list-row li a{display: block}
+.brands-list div ul.brands-list-row li a img{vertical-align: middle;margin: 0 auto}

@@ -1,0 +1,12 @@
+<?php
+$collection = $this->getBrands(); ?>
+
+<ul class="home-current-brands">
+<?php foreach($collection as $brand) { ?>
+    <li>
+        <a href="<?php echo $this->getUrl() . $brand['url_key']  ?>" title="<?php echo $this->htmlEscape($brand['title'])  ?>">
+            <img alt="<?php echo $this->htmlEscape($brand['manufacturer'])  ?>" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $brand['logo_small'] ?>" border="0" />
+        </a>
+    </li>
+<?php } ?>
+</ul>

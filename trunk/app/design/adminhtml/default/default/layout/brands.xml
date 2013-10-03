@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <brands_adminhtml_brands_index>
+		<reference name="content">
+            <block type="brands/adminhtml_brands" name="brands" />
+        </reference>
+    </brands_adminhtml_brands_index>
+
+    <brands_adminhtml_category_index>
+        <reference name="root">
+            <action method="setTemplate"><template>brands/ajax.phtml</template></action>
+        </reference>
+		<reference name="content">
+            <block type="brands/adminhtml_catalog_category_tab_brands" name="category.brands.grid" />
+        </reference>
+    </brands_adminhtml_category_index>
+</layout>

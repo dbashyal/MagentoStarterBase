@@ -1,0 +1,56 @@
+<?php
+//Get selected Brand
+$brands_selected = Mage::registry('brands_selected');
+$title = '';
+$desc ='';
+?>
+
+<?php
+if(is_array($brands_selected) && count($brands_selected))
+{
+    $title = $brands_selected['manufacturer'];
+    $desc = $brands_selected['content'];
+    ?>
+    <p class="category-image">
+        <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . trim($brands_selected['logo_large'], '/'); ?>" alt="<?php echo $this->htmlEscape($brands_selected['manufacturer'])?>" title="<?php echo $this->htmlEscape($brands_selected['manufacturer'])?>" />
+    </p>
+
+    <?php
+}
+?>
+<div class="category-list-wrapper">
+    <div class="page-title category-title">
+        <span class="back-link" onclick="javascript:history.go(-1)">back</span>
+        <h1><?php echo Mage::helper('brands')->__($title) ?></h1>
+    </div>
+
+    <p class="fclear">&nbsp;</p>
+
+    <div class="category-list-products">
+    <div class="category-list-products-padding">
+        <div class="category-description std">
+            <?php echo $brands_selected['content']; ?>
+        </div>
+        <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<?php if(!$this->getResultCount()): ?>
+<ul class="messages">
+    <li class="error-msg">
+        <ul>
+            <li>
+               <?php echo $this->helper('catalogsearch')->__('No items found.');?>
+            </li>
+        </ul>
+    </li>
+</ul>
+<?php endif; ?>
+
+<?php if($this->getResultCount()): ?>
+    <div class="results-view"><?php echo $this->getProductListHtml() ?></div>
+<?php endif; ?>
+
+</div>
+</div>
+
+    <p class="fclear">&nbsp;</p>
+
+</div>

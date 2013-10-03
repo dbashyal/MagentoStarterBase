@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+    </default>
+    <brands_index_index>
+		<reference name="head">
+            <action method="addCss"><stylesheet>css/brands.css</stylesheet></action>
+			<action method="setTitle"><title>Displaying all the available Brands</title></action>
+		</reference>
+        <reference name="content">
+            <block type="brands/brands" name="brands" template="brands/brands.phtml" />
+        </reference>
+    </brands_index_index>
+    <brands_index_selected>
+        <reference name="left">
+            <block type="catalog/layer_view" name="catalog.leftnav" after="currency" template="catalog/layer/view.phtml"/>
+        </reference>
+        <reference name="content">
+            <block type="catalogsearch/result" name="search.result" template="brands/result.phtml">
+                <block type="catalog/product_list" name="search_result_list" template="catalog/product/list.phtml">
+                    <block type="catalog/product_list_toolbar" name="product_list_toolbar" template="catalog/product/list/toolbar.phtml">
+                        <block type="page/html_pager" name="product_list_toolbar_pager"/>
+                    </block>
+                    <action method="addColumnCountLayoutDepend"><layout>empty</layout><count>6</count></action>
+                    <action method="addColumnCountLayoutDepend"><layout>one_column</layout><count>5</count></action>
+                    <action method="addColumnCountLayoutDepend"><layout>two_columns_left</layout><count>4</count></action>
+                    <action method="addColumnCountLayoutDepend"><layout>two_columns_right</layout><count>4</count></action>
+                    <action method="addColumnCountLayoutDepend"><layout>three_columns</layout><count>3</count></action>
+                    <action method="setToolbarBlockName"><name>product_list_toolbar</name></action>
+                </block>
+                <action method="setListOrders"/>
+                <action method="setListModes"/>
+                <action method="setListCollection"/>
+            </block>
+        </reference>
+    </brands_index_selected>
+    <brands_index_ajaxed>
+        <reference name="left">
+            <block type="catalog/layer_view" name="catalog.layer.view" after="currency"/>
+            <action method="unsetChild"><name>currency</name></action>
+        </reference>
+        <reference name="content">
+            <block type="catalogsearch/result" name="search.result" template="brands/result.phtml">
+                <block type="catalog/product_list" name="search_result_list" template="catalog/product/list.phtml">
+                    <block type="catalog/product_list_toolbar" name="product_list_toolbar" template="catalog/product/list/toolbar.phtml">
+                        <block type="page/html_pager" name="product_list_toolbar_pager"/>
+                    </block>
+                    <action method="addColumnCountLayoutDepend"><layout>empty</layout><count>6</count></action>
+                    <action method="addColumnCountLayoutDepend"><layout>one_column</layout><count>5</count></action>
+                    <action method="addColumnCountLayoutDepend"><layout>two_columns_left</layout><count>4</count></action>
+                    <action method="addColumnCountLayoutDepend"><layout>two_columns_right</layout><count>4</count></action>
+                    <action method="addColumnCountLayoutDepend"><layout>three_columns</layout><count>3</count></action>
+                    <action method="setPageLayout"><layout>three_columns</layout></action>
+                    <action method="setToolbarBlockName"><name>product_list_toolbar</name></action>
+                </block>
+                <action method="setListOrders"/>
+                <action method="setListModes"/>
+                <action method="setListCollection"/>
+            </block>
+        </reference>
+    </brands_index_ajaxed>
+    <brands_index_test>
+		<reference name="head">
+			<action method="setTitle"><title>testing brands module</title></action>
+		</reference>
+        <reference name="content">
+			<block type="brands/brands" name="brands.test" template="brands/test.phtml" />
+        </reference>
+    </brands_index_test>
+</layout>

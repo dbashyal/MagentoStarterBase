@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Ebizmarts_AbandonedCart>
+            <active>false</active>
+            <codePool>community</codePool>
+        </Ebizmarts_AbandonedCart>
+    </modules>
+</config>

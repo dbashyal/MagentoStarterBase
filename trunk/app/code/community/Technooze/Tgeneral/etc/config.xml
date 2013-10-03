@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * @category   Technooze
+ * @package    Technooze_Tgeneral
+ * @author     ModuleCreator
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+ -->
+<config>
+    <modules>
+        <Technooze_Tgeneral>
+            <version>0.1.0</version>
+        </Technooze_Tgeneral>
+    </modules>
+    <global>
+        <blocks>
+            <tgeneral>
+                <class>Technooze_Tgeneral_Blocks</class>
+            </tgeneral>
+            <page>
+                <rewrite>
+                    <!-- rewrite Page\Block\Html\Head.php -->
+                    <html_head>Technooze_Tgeneral_Block_Html_Head</html_head>
+                </rewrite>
+            </page>
+            <reports>
+                <rewrite>
+                    <!-- rewrite Reports\Block\Product\Viewed.php -->
+					<!-- Shows current product as recently viewed if it's first viewed item, so recently viewed block is always on in the product detail page -->
+                    <product_viewed>Technooze_Tgeneral_Block_Reports_Product_Viewed</product_viewed>
+                </rewrite>
+            </reports>
+        </blocks>
+        <helpers>
+            <tgeneral>
+                <class>Technooze_Tgeneral_Helper</class>
+            </tgeneral>
+        </helpers>
+        <models>
+            <tgeneral>
+                <class>Technooze_Tgeneral_Model</class>
+            </tgeneral>
+        </models>
+    </global>
+    <frontend>
+		<layout>
+			<updates>
+				<tgeneral module="Technooze_Tgeneral">
+					<file>tgeneral.xml</file>
+				</tgeneral>
+			</updates>
+		</layout>
+    </frontend>
+</config>
