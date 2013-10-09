@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -275,29 +275,29 @@ class Mage_XmlConnect_Block_Adminhtml_Mobile_Submission_Tab_Container_Submission
                 $this->addImage($fieldset, 'conf/submit/loader_image', $this->__('Loader Splash Screen'),
                     $this->__('Image that appears on first screen while your app is loading.') . $this->__('Required size: %spx x %spx.', 320, 460), '', true);
 
-                $this->addImage($fieldset, 'conf/submit/loader_image_i4', $this->__('Loader Splash Screen <br />(iPhone 4 retina)'),
+                $this->addImage($fieldset, 'conf/submit/loader_image_i4', $this->__('Loader Splash Screen (iPhone 4 retina)'),
                     $this->__('Image that appears on first screen while your app is loading.') . $this->__('Required size: %spx x %spx.', 640, 920), '', false);
 
                 $this->addImage($fieldset, 'conf/submit/logo', $this->__('Custom App Icon'),
                     $this->__('Icon that will appear on the user\'s phone after they download your app.  You do not need to apply a gradient or soft edges (this is done automatically by Apple).') . $this->__('Recommended size: %spx x %spx at %s dpi.', 57, 57, 72), '', true);
 
-                $this->addImage($fieldset, 'conf/submit/logo_i4', $this->__('Custom App Icon <br />(iPhone 4 retina)'),
+                $this->addImage($fieldset, 'conf/submit/logo_i4', $this->__('Custom App Icon (iPhone 4 retina)'),
                     $this->__('Icon that will appear on the user\'s phone after they download your app. You do not need to apply a gradient or soft edges (this is done automatically by Apple).') . $this->__('Recommended size: %spx x %spx.', 114, 114), '', false);
 
                 $this->addImage($fieldset, 'conf/submit/big_logo', $this->__('Copyright Page Logo'),
                     $this->__('Store logo that is displayed on copyright page of app.') . $this->__('Preferred size: %spx x %spx.', 100, 100), '', true);
 
-                $this->addImage($fieldset, 'conf/submit/big_logo_i4', $this->__('Copyright Page Logo <br />(iPhone 4 retina)'),
+                $this->addImage($fieldset, 'conf/submit/big_logo_i4', $this->__('Copyright Page Logo (iPhone 4 retina)'),
                     $this->__('Store logo that is displayed on copyright page of app.') . $this->__('Preferred size: %spx x %spx.', 200, 200), '', false);
                 break;
             case Mage_XmlConnect_Helper_Data::DEVICE_TYPE_IPAD:
                 $this->addImage($fieldset, 'conf/submit/icon', $this->__('Large iTunes Icon'),
                     $this->__('Large icon that appears in the iTunes App Store. You do not need to apply a gradient or soft edges (this is done automatically by Apple).') . $this->__('Required size: %spx x %spx.', 1024, 1024), '', true);
 
-                $this->addImage($fieldset, 'conf/submit/ipad_loader_portrait_image', $this->__('Loader Splash Screen <br />(portrait mode)'),
+                $this->addImage($fieldset, 'conf/submit/ipad_loader_portrait_image', $this->__('Loader Splash Screen (portrait mode)'),
                     $this->__('Image that appears on first screen while your app is loading.') . $this->__('Required size: %spx x %spx.', 768, 1024), '', true);
 
-                $this->addImage($fieldset, 'conf/submit/ipad_loader_landscape_image', $this->__('Loader Splash Screen <br />(landscape mode)'),
+                $this->addImage($fieldset, 'conf/submit/ipad_loader_landscape_image', $this->__('Loader Splash Screen (landscape mode)'),
                     $this->__('Image that appears on first screen while your app is loading.') . $this->__('Required size: %spx x %spx.', 1024, 768), '', true);
 
                 $this->addImage($fieldset, 'conf/submit/ipad_logo', $this->__('Custom App Icon'),

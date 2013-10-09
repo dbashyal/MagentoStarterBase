@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -103,7 +103,7 @@ class Mage_XmlConnect_Block_Adminhtml_Mobile_Edit_Tab_Design_Accordion_Images
             case Mage_XmlConnect_Helper_Data::DEVICE_TYPE_IPAD:
                 $this->addImage($fieldset,
                     'conf[native][body][bannerIpadLandscapeImage]',
-                    $this->__('Banner on Home Screen <br />(landscape mode)'),
+                    $this->__('Banner on Home Screen (landscape mode)'),
                     $this->__('Recommended size %spx x %spx.', 1024, 344)
                         . $this->__('Note: Image size affects the performance of your app.'),
                     $this->_getDesignPreviewImageUrl('conf/native/body/bannerIpadLandscapeImage'),
@@ -111,7 +111,7 @@ class Mage_XmlConnect_Block_Adminhtml_Mobile_Edit_Tab_Design_Accordion_Images
                 );
                 $this->addImage($fieldset,
                     'conf[native][body][bannerIpadImage]',
-                    $this->__('Banner on Home Screen <br />(portrait mode)'),
+                    $this->__('Banner on Home Screen (portrait mode)'),
                     $this->__('Recommended size %spx x %spx.', 768, 294)
                         . $this->__('Note: Image size affects the performance of your app.'),
                     $this->_getDesignPreviewImageUrl('conf/native/body/bannerIpadImage'),
@@ -119,7 +119,7 @@ class Mage_XmlConnect_Block_Adminhtml_Mobile_Edit_Tab_Design_Accordion_Images
                 );
                 $this->addImage($fieldset,
                     'conf[native][body][backgroundIpadLandscapeImage]',
-                    $this->__('App Background <br />(landscape mode)'),
+                    $this->__('App Background (landscape mode)'),
                     $this->__('Recommended size %spx x %spx.', 1024, 704)
                         . $this->__('Note: Image size affects the performance of your app.'),
                     $this->_getDesignPreviewImageUrl('conf/native/body/backgroundIpadLandscapeImage'),
@@ -127,7 +127,7 @@ class Mage_XmlConnect_Block_Adminhtml_Mobile_Edit_Tab_Design_Accordion_Images
                 );
                 $this->addImage($fieldset,
                     'conf[native][body][backgroundIpadPortraitImage]',
-                    $this->__('App Background <br />(portrait mode)'),
+                    $this->__('App Background (portrait mode)'),
                     $this->__('Recommended size %spx x %spx.', 768, 960)
                         . $this->__('Note: Image size affects the performance of your app.'),
                     $this->_getDesignPreviewImageUrl('conf/native/body/backgroundIpadPortraitImage'),
