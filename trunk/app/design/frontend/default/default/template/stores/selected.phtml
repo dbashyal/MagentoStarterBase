@@ -1,0 +1,192 @@
+<?php
+/**
+ * Technooze_Stores extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category   Technooze
+ * @package    Technooze_Stores
+ * @copyright  Copyright (c) 2008 Technooze LLC
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/**
+ * @category   Technooze
+ * @package    Technooze_Stores
+ * @author     Technooze <info@technooze.com>
+ */
+?>
+<?php
+$_apiKey = Mage::getStoreConfig('stores/general/google_api_key');
+$_showMap = Mage::getStoreConfig('stores/general/show_map');
+$_showSearch = Mage::getStoreConfig('stores/general/show_search');
+$_defaultLocation = Mage::getStoreConfig('stores/general/default_location');
+$_defaultRadius = Mage::getStoreConfig('stores/general/default_radius');
+
+if(empty($_defaultRadius)) $_defaultRadius = 25;
+
+$map = (array)Mage::registry('store_map');
+?>
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
+<!--script src="http://maps.google.com.au/maps?file=api&amp;v=2&amp;key=<?php echo $_apiKey ?>" type="text/javascript"></script-->
+
+
+<div class="page_content">
+    <div class="store-search">
+        <div class="page-title">
+            <h2>Your Local Store</h2>
+        </div>
+        <div class="store-locator">
+            <form id="store-quick-search-form" action="<?php echo $this->getUrl('') ?>stores/location/find/">
+                <input id="address" type="text" name="address" value="<?php echo $this->helper('thelper')->quoteEscape($this->getRequest()->getParam('store-search')) ?>" class="textbox fleft" placeholder="<?php echo $this->__("Postcode / Suburb") ?>" />
+                <button type="submit" id="search-btn" title="<?php echo $this->__('Search') ?>" class="button fleft"><span><span>Find Your Local Store</span></span></button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="page-title">
+    	<h1 class="no_margin"><?php echo $map['title']; //preg_replace('/\-+/', '-', $map['title']) ?></h1>
+    </div>
+    <ul class="two_columns" id="store_detail">
+        <li class="right">
+            <h6 class="address"><?php echo nl2br(str_replace(',', ', ',$map['address']));?></h6>
+            <?php if(!empty($map['phone'])){ ?><h6 class="phone"><?php echo $map['phone'] ?></h6><?php } ?>
+            <?php if(!empty($map['fax'])){ ?><h6 class="fax"><?php echo $map['fax'] ?></h6><?php } ?>
+            <h6 id="store_hours_title">Opening Hours</h6>
+            <ul class="clearer" id="store_hours">
+            	<?php $hours = explode("\n", $map['hours']); ?>
+                <?php foreach($hours as $v): ?>
+                	<?php if(!empty($v)): ?>
+                        <?php $h = explode('|', $v); ?>
+                        <li>
+                            <?php if(!empty($h[0])) echo '<span class="bold strong">'.trim($h[0]).': </span>'; ?>
+                            <?php if(!empty($h[1])) echo '<span> '.trim($h[1]).'</span>'; ?>
+                        </li>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </ul>
+            <?php if(!empty($map['notes'])): ?><div class="stores_note"><?php echo $map['notes']; ?></div><?php endif; ?>
+            <?php
+            $distance = Mage::app()->getRequest()->getParam('distance');
+            $distance = preg_replace('/[^0-9\.]/', '', $distance);
+            ?>
+            <?php if(!empty($distance)){ ?>
+                <h6 class="distance">Distance: <span><?php echo $distance; ?>km</span></h6>
+            <?php } ?>
+            <?php if(!empty($map['store_pdf'])){ ?>
+                <h6 class="catalog">Catalogue: <a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $map['store_pdf']; ?>" target="_blank">View Catalogues</a></h6>
+            <?php } ?>
+        </li>
+        <li class="left"><div id="map" style="width:412px; height:348px; border: 1px solid #dedede;"></div></li>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    //<![CDATA[
+    var map;
+    var markers = [];
+    var infoWindow;
+    var locationSelect;
+
+    function load() {
+        var latlng = new google.maps.LatLng(<?php echo $map['latitude'] ?>, <?php echo $map['longitude'] ?>);
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: latlng,
+            zoom: 16,
+            mapTypeId: 'roadmap',
+            mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU}
+        });
+        infoWindow = new google.maps.InfoWindow({maxWidth: 200});
+
+        var html = '<div id="content">'+
+                        '<h2 id="firstHeading" class="firstHeading"><?php echo $map['title'] ?></h2>'+
+                        '<div id="bodyContent">'+
+                            '<p><?php echo addslashes(str_replace("\r\n", ' ', nl2br($map['address']))) ?></p>'+
+                        '</div>'+
+                    '</div>';
+        var marker = new google.maps.Marker({
+            map: map,
+            position: latlng,
+            title: '<?php echo trim($map['title']) ?>',
+            icon: '<?php echo $this->getSkinUrl("images/google_map_marker.png"); ?>',
+            animation: google.maps.Animation.DROP
+        });
+        google.maps.event.addListener(marker, 'click', function() {
+            infoWindow.setContent(html);
+            infoWindow.open(map, marker);
+        });
+        markers.push(marker);
+    }
+    //]]>
+    load();
+</script>
+
+    <p class="clear">&nbsp;</p>
+
+<?php
+/*
+ * Other Stores nearby
+ */
+?>
+<?php if($map['address']):	?>
+	<p class="intro">Other Stores Nearby</p>
+<?php endif; ?>
+
+<div id="storelocator-results" style="visibility:hidden;">
+	<div id="storelocator-container">
+    	<div id="mapsearch"><img class="storeLoader" src="<?php echo $this->getSkinUrl('images/ajax-loader.gif'); ?>" alt="Loading..." /></div>
+	</div>
+</div>
+
+<script type="text/javascript">
+var ex;
+(function(){
+    var storeLocator = new TechnoozeStores({
+        redirect: false,
+        sidebarEl: $('mapsearch'),
+        searchUrl: '<?php echo $this->getUrl('stores/location/closeby')?>',
+        generateSidebarHtml: function(m) {
+            return '<b>' + m.title + '</b> (' + parseFloat(m.distance).toFixed(1) + ' ' + m.units + ')<br/>'
+                + m.address_display.replace(/\n/, '<br/>');
+        },
+        generateMarkerHtml: function(m) {
+            var url = m.website_url.replace(/\s/,'');
+            return '<b>' + m.title + '</b> <br/>'
+                + m.address_display.replace(/\n/, '<br/>') + '<br/>'
+                + (m.phone.length>5 ? m.phone + '<br/>' : '')
+                + '<br/>'
+                + (url.length>5 ? '<a href="' + (url.match(/@/) ? 'mailto:' : '') + url + '"><strong>' + url + '</strong></a><br/>' : '')
+                + '<p>' + m.notes + '</p>';
+        }
+    });
+
+    Event.observe(window, 'load', function () {
+        storeLocator.load();
+
+
+<?php if ($map['address']): ?>
+        $('storelocator-results').style.visibility = 'visible';
+        storeLocator.search('<?php echo addslashes($map['address']) ?>', {
+            radius: '<?php echo addslashes($_defaultRadius) ?>'
+            /*, type: $('product_type').value*/
+        });
+
+<?php elseif ($_defaultLocation): ?>
+        $('storelocator-results').style.visibility = 'visible';
+        storeLocator.search('<?php echo addslashes($_defaultLocation) ?>', {
+            radius: '<?php echo addslashes($_defaultRadius) ?>'
+        });
+<?php endif ?>
+    });
+})();
+</script>
+
+
+<?php /*floating sidebar*/ ?>
+<?php echo $this->getChildHtml('side'); ?>

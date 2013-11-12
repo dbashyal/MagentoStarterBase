@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Technooze_Stores extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category   Technooze
+ * @package    Technooze_Stores
+ * @copyright  Copyright (c) 2008 Technooze LLC
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/**
+ * @category   Technooze
+ * @package    Technooze_Stores
+ * @author     Technooze <info@technooze.com>
+ */
+-->
+<layout>
+
+    <stores translate="label">
+        <label>Stores</label>
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+    </stores>
+
+    <stores_index_noroute translate="label">
+        <label>Stores No-Route Page</label>
+        <reference name="root">
+            <action method="setTemplate"><template>stores/contentonly.phtml</template></action>
+        </reference>
+    </stores_index_noroute>
+
+    <stores_index_defaultnoroute>
+        <remove name="right"/>
+        <remove name="left"/>
+
+        <reference name="root">
+            <action method="setTemplate"><template>stores/contentonly.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="default_no_route" template="cms/default/no-route.phtml"/>
+        </reference>
+    </stores_index_defaultnoroute>
+    <stores_index_index>
+		<reference name="head">
+			<action method="setTitle"><title>Stores</title></action>
+			<action method="setKeywords"><keywords></keywords></action>
+			<action method="setDescription"><description></description></action>
+            <action method="addCss"><stylesheet>css/store-locator.css</stylesheet></action>
+            <action method="addItem"><type>skin_js</type><name>js/store-locator.js</name><params/></action>
+        </reference>
+
+        <reference name="content">
+            <block type="core/template" template="stores/allstores.phtml" name="stores.map" />
+        </reference>
+    </stores_index_index>
+    <stores_index_selected>
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+		<reference name="head">
+			<action method="setTitle"><title>Stores</title></action>
+			<action method="setKeywords"><keywords></keywords></action>
+			<action method="setDescription"><description></description></action>
+            <action method="addCss"><stylesheet>css/store-locator.css</stylesheet></action>
+            <action method="addItem"><type>skin_js</type><name>js/store-locator.js</name><params/></action>
+        </reference>
+
+        <reference name="content">
+            <block type="core/template" name="side" template="page/html/side.phtml" /><!-- add sidebar item here if any -->
+            <block type="core/template" template="stores/selected.phtml" name="stores.map" />
+        </reference>
+    </stores_index_selected>
+    <stores_index_map>
+        <reference name="head">
+              <action method="addCss"><stylesheet>css/store-locator.css</stylesheet></action>
+            <action method="addItem"><type>skin_js</type><name>js/store-locator.js</name><params/></action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" template="stores/map.phtml" name="stores.map" />
+        </reference>
+    </stores_index_map>
+    <stores_location_map>
+        <reference name="head">
+              <action method="addCss"><stylesheet>css/store-locator.css</stylesheet></action>
+            <action method="addItem"><type>skin_js</type><name>js/store-locator.js</name><params/></action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" template="stores/map.phtml" name="stores.map" />
+        </reference>
+    </stores_location_map>
+    <stores_location_find>
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+		<reference name="head">
+			<action method="setTitle"><title>Store Search Results</title></action>
+			<action method="setKeywords"><keywords></keywords></action>
+			<action method="setDescription"><description></description></action>
+              <action method="addCss"><stylesheet>css/store-locator.css</stylesheet></action>
+            <action method="addItem"><type>skin_js</type><name>js/store-locator.js</name><params/></action>
+        </reference>
+
+        <reference name="content">
+            <block type="stores/stores" template="stores/findstore.phtml" name="stores.map" />
+        </reference>
+    </stores_location_find>
+    <stores_location_finder>
+        <reference name="head">
+              <action method="addCss"><stylesheet>css/store-locator.css</stylesheet></action>
+            <action method="addItem"><type>skin_js</type><name>js/store-locator.js</name><params/></action>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate"><template>stores/contentonly.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" template="stores/finder.phtml" name="stores.map" />
+        </reference>
+    </stores_location_finder>
+    <stores_location_closeby>
+        <update handle="stores_location_finder" />
+        <reference name="stores.map">
+            <action method="setTemplate">
+                <template>stores/closeby.phtml</template>
+            </action>
+        </reference>
+    </stores_location_closeby>
+</layout>

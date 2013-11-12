@@ -1,0 +1,16 @@
+/*Store locator css*/
+.fclear{}
+#map{}
+#storelocator-container{margin: 0 0 50px 0;}
+#storelocator-container .no-stores{}
+#storelocator-container ul.store_locations{}
+#storelocator-container ul.store_locations li{padding: 8px 0 11px;clear: both;overflow: hidden;}
+#storelocator-container ul.store_locations li.table-heading{font-weight: bold;}
+#storelocator-container ul.store_locations li.table-data{cursor: pointer;}
+#storelocator-container ul.store_locations li.odd{background: #F4F6F5;}
+#storelocator-container ul.store_locations li.even{}
+#storelocator-container ul.store_locations li span.col{float: left;text-align: left;width: 142px;margin-left: 22px;}
+#storelocator-container ul.store_locations li span.col1{}
+#storelocator-container ul.store_locations li span.col2{width: 548px;}
+#storelocator-container ul.store_locations li span.col3{width: 189px;}
+#storelocator-container ul.store_locations li span.col4{width: 70px;}

@@ -1,0 +1,66 @@
+<?php
+/**
+ * Technooze_Stores extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category   Technooze
+ * @package    Technooze_Stores
+ * @copyright  Copyright (c) 2008 Technooze LLC
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/**
+ * @category   Technooze
+ * @package    Technooze_Stores
+ * @author     Technooze <info@technooze.com>
+ */
+?>
+<?php $stores_list = (array)Mage::registry('stores_list'); ?>
+<?php $column_count = 3; $i = 1; ?>
+<div class="category-list-wrapper page-wrapper">
+
+<div class="page-title">
+    <span class="back-link" onclick="javascript:history.go(-1)">&lt; back</span>
+    <h1><?php echo $this->__('retailers')?></h1>
+</div>
+    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('retailers-page')->toHtml() ?>
+<div id="store_listing">
+
+<?php if(count($stores_list)): ?>
+
+	<ul class="dotted_list">
+
+	<?php foreach($stores_list as $v): ?>
+
+		<li class="<?php echo (($i % 2 == 0) ? 'even' : 'odd'); if(($i++)%$column_count == 0) echo ' last'; ?>">
+            <a title="<?php echo $this->htmlEscape($v['title']); ?>" href="<?php echo $this->getUrl().$v['url']; ?>.html" class="store-photo">
+                <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $v['store_photo'] ?>" alt="<?php echo $this->htmlEscape($v['title']) ?>" class="store-photo">
+            </a>
+            <?php
+            /*
+            <div class="div-top">
+                <div class="store-contact">
+                    <span class="label">Customer service</span>
+                    <span class="store-phone"><?php echo trim($v['phone']) ?></span>
+                    <a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $v['store_pdf'] ?>" class="download-pdf" target="_blank">download location PDF</a>
+                </div>
+                <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $v['logo_large'] ?>" alt="<?php echo $this->htmlEscape($v['title']) ?>" class="store-logo-small">
+            </div>
+            <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $v['store_photo'] ?>" alt="<?php echo $this->htmlEscape($v['title']) ?>" class="store-photo">
+             */
+            ?>
+        </li>
+
+	<?php endforeach; ?>
+
+	</ul>
+
+<?php endif; ?>
+<p class="fclear"></p>
+</div></div>

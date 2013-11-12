@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Technooze_Stores extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category   Technooze
+ * @package    Technooze_Stores
+ * @copyright  Copyright (c) 2008 Technooze LLC
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/**
+ * @category   Technooze
+ * @package    Technooze_Stores
+ * @author     Technooze <info@technooze.com>
+ */
+-->
+<config>
+    <modules>
+        <Technooze_Stores>
+            <version>0.5.0</version>
+        </Technooze_Stores>
+    </modules>
+    <frontend>
+        <routers>
+            <stores>
+                <use>standard</use>
+                <args>
+                    <module>Technooze_Stores</module>
+                    <frontName>stores</frontName>
+                </args>
+            </stores>
+        </routers>
+        <translate>
+            <modules>
+                <Technooze_Stores>
+                    <files>
+                        <default>Technooze_Stores.csv</default>
+                    </files>
+                </Technooze_Stores>
+            </modules>
+        </translate>
+          <layout>
+              <updates>
+                  <stores module="Technooze_Stores">
+                      <file>stores.xml</file>
+                  </stores>
+              </updates>
+          </layout>
+    </frontend>
+    <global>
+        <models>
+            <stores>
+                <class>Technooze_Stores_Model</class>
+                <resourceModel>stores_mysql4</resourceModel>
+            </stores>
+            <stores_mysql4>
+                <class>Technooze_Stores_Model_Mysql4</class>
+                <entities>
+                    <location>
+                        <table>stores</table>
+                    </location>
+                    <products>
+                        <table>stores_products</table>
+                    </products>
+                </entities>
+            </stores_mysql4>
+        </models>
+        <resources>
+            <technoozestores_setup>
+                <setup>
+                    <module>Technooze_Stores</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </technoozestores_setup>
+            <stores_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </stores_write>
+            <stores_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </stores_read>
+        </resources>
+        <helpers>
+            <stores><class>Technooze_Stores_Helper</class></stores>
+        </helpers>
+        <blocks>
+            <!--
+            <adminhtml>
+                <rewrite>
+                    <catalog_product_edit_tabs>Technooze_Stores_Block_Adminhtml_Catalog_Product_Edit_Tabs</catalog_product_edit_tabs>
+                </rewrite>
+            </adminhtml>
+            -->
+            <stores>
+                <class>Technooze_Stores_Block</class>
+            </stores>
+        </blocks>
+        <stores>
+            <private_fields>
+                <test1/>
+                <test2/>
+            </private_fields>
+        </stores>
+    </global>
+    <admin>
+         <routers>
+            <storesadmin>
+                <use>admin</use>
+                <args>
+                    <module>Technooze_Stores</module>
+                    <frontName>storesadmin</frontName>
+                </args>
+            </storesadmin>
+        </routers>
+    </admin>
+    <adminhtml>
+        <layout>
+            <updates>
+                <stores module="Technooze_Stores">
+                    <file>stores.xml</file>
+                </stores>
+            </updates>
+        </layout>
+        <events>
+            <catalog_product_save_after>
+                <observers>
+                    <stores_save_product_data>
+                        <type>singleton</type>
+                        <class>stores/observer</class>
+                        <method>saveProductTabData</method>
+                    </stores_save_product_data>
+                </observers>
+            </catalog_product_save_after>
+        </events>
+        <menu>
+            <cms>
+                <children>
+                    <stores translate="title" module="stores">
+                        <title>Store Locations</title>
+                        <action>storesadmin/adminhtml_location/</action>
+                    </stores>
+                 </children>
+            </cms>
+        </menu>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <cms>
+                            <children>
+                                <stores>
+                                    <title>Store Locations</title>
+                                </stores>
+                            </children>
+                        </cms>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <stores>
+                                            <title>Store Locations</title>
+                                        </stores>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <translate>
+            <modules>
+                <Technooze_Stores>
+                    <files>
+                        <default>Technooze_Stores.csv</default>
+                    </files>
+                </Technooze_Stores>
+            </modules>
+        </translate>
+    </adminhtml>
+    <default>
+        <stores>
+            <general>
+                <google_geo_url><![CDATA[http://maps.google.com.au/maps/geo]]></google_geo_url>
+                <distance_units>km</distance_units>
+                <num_results>20</num_results>
+                <show_search>1</show_search>
+                <show_map>0</show_map>
+            </general>
+        </stores>
+    </default>
+</config>

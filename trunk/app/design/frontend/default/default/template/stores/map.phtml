@@ -1,0 +1,271 @@
+<?php
+/**
+ * Technooze_Stores extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category   Technooze
+ * @package    Technooze_Stores
+ * @copyright  Copyright (c) 2008 Technooze LLC
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/**
+ * @category   Technooze
+ * @package    Technooze_Stores
+ * @author     Technooze <info@technooze.com>
+ */
+?>
+<?php
+$_apiKey = Mage::getStoreConfig('stores/general/google_api_key');
+$_showMap = Mage::getStoreConfig('stores/general/show_map');
+$_showSearch = Mage::getStoreConfig('stores/general/show_search');
+$_defaultLocation = Mage::getStoreConfig('stores/general/default_location');
+$_defaultRadius = Mage::getStoreConfig('stores/general/default_radius');
+
+if(empty($_defaultRadius)) $_defaultRadius = 25;
+?>
+
+<style type="text/css">
+#sidebar a { cursor:pointer; margin-bottom:5px; background-color:#fff; display:block; }
+#sidebar a:hover { background-color:#eee; }
+#storelocator-container { width:610px; font-family:Arial, sans-serif; font-size:11px; border:1px solid black; background:white; }
+#sidebar { overflow: auto; height: 380px; padding:10px; font-size: 11px; color: #000; }
+#map { overflow: hidden; width:410px; height:400px; }
+</style>
+
+<script src="http://maps.google.com.au/maps?file=api&amp;v=2&amp;key=<?php echo $_apiKey ?>" type="text/javascript"></script>
+
+<script type="text/javascript">
+//<![CDATA[
+
+function TechnoozeStores(config) {
+    var map;
+    var geocoder;
+
+    function searchLocationsNear(center, params) {
+        var searchUrl = config.searchUrl+'?lat='+center.lat()+'&lng='+center.lng()+'&'+Object.toQueryString(params);
+        GDownloadUrl(searchUrl, function(data) {
+            var xml = GXml.parse(data);
+            var entries = xml.documentElement.getElementsByTagName('marker');
+            map.clearOverlays();
+
+            var sidebar = config.sidebarEl;
+            sidebar.innerHTML = '';
+            if (entries.length == 0) {
+                sidebar.innerHTML = 'No results found.';
+                map.setCenter(new GLatLng(40, -100), 4);
+                return;
+            }
+
+            var bounds = new GLatLngBounds();
+            for (var i = 0; i < entries.length; i++) {
+                var entry = {};
+                for (var j = 0, l = entries[i].attributes.length; j < l; j++) {
+                    entry[entries[i].attributes[j].nodeName] = entries[i].attributes[j].nodeValue;
+                };
+                var point = new GLatLng(parseFloat(entry.latitude), parseFloat(entry.longitude));
+                bounds.extend(point);
+                var marker = createMarker(entry, point);
+                map.addOverlay(marker);
+                var sidebarEntry = createSidebarEntry(entry, marker);
+                sidebar.appendChild(sidebarEntry);
+             }
+             map.setCenter(bounds.getCenter(), map.getBoundsZoomLevel(bounds));
+        });
+    }
+
+    function escapeUserText(text) {
+        if (text === undefined) {
+            return null;
+        }
+        text = text.replace(/@/, "@@");
+        text = text.replace(/\\/, "@\\");
+        text = text.replace(/'/, "@'");
+        text = text.replace(/\[/, "@[");
+        text = text.replace(/\]/, "@]");
+        return encodeURIComponent(text);
+    };
+
+    function createLabeledMarkerIcon(m) {
+        var opts = config.iconOpts || {};
+
+        var primaryColor = opts.primaryColor || "#DA7187";
+        var strokeColor = opts.strokeColor || "#000000";
+        var starPrimaryColor = opts.starPrimaryColor || "#FFFF00";
+        var starStrokeColor = opts.starStrokeColor || "#0000FF";
+        var label = escapeUserText(opts.label) || "";
+        var labelColor = opts.labelColor || "#000000";
+        var addStar = m.star || false;
+
+        var pinProgram = (addStar) ? "pin_star" : "pin";
+        var baseUrl = "http://chart.apis.google.com/chart?cht=d&chdp=mapsapi&chl=";
+        var iconUrl = baseUrl + pinProgram + "'i\\"
+            + "'[" + m.marker_label +  "'-4'f\\"  + "hv'a\\]" + "h\\]o\\"
+            + primaryColor.replace("#", "")  + "'fC\\"
+            + labelColor.replace("#", "")  + "'tC\\"
+            + strokeColor.replace("#", "")  + "'eC\\";
+        if (addStar) {
+            iconUrl += starPrimaryColor.replace("#", "") + "'1C\\"
+                + starStrokeColor.replace("#", "") + "'0C\\";
+        }
+        iconUrl += "Lauto'f\\";
+
+        var icon = new GIcon(G_DEFAULT_ICON);
+        icon.image = iconUrl + "&ext=.png";
+        icon.iconSize = (addStar) ? new GSize(23, 39) : new GSize(21, 34);
+        return icon;
+    }
+
+    function createMarker(m, point) {
+        var icon = createLabeledMarkerIcon(m);
+        var marker = new GMarker(point, icon);
+        GEvent.addListener(marker, 'click', function() {
+            marker.openInfoWindowHtml(config.generateMarkerHtml(m));
+        });
+        return marker;
+    }
+
+    function createSidebarEntry(m, marker) {
+        var a = document.createElement('a');
+        a.href = "javascript:void(0)";
+        var icon = createLabeledMarkerIcon(m);
+        var html = '<img src="'+icon.image+'" style="float:left"/>';
+        html += config.generateSidebarHtml(m);
+        a.innerHTML = html;
+        GEvent.addDomListener(a, 'click', function() {
+            GEvent.trigger(marker, 'click');
+        });
+        return a;
+    }
+
+    return {
+        load: function () {
+            if (!GBrowserIsCompatible()) return;
+            geocoder = new GClientGeocoder();
+            map = new GMap2(config.mapEl);
+            map.addControl(new GSmallMapControl());
+            map.addControl(new GMapTypeControl());
+            map.setCenter(new GLatLng(40, -100), 4);
+        },
+        search: function(address, params) {
+            geocoder.getLatLng(address, function(latlng) {
+                if (!latlng) {
+                    alert('The address is not valid: '+address);
+                } else {
+                    searchLocationsNear(latlng, params);
+                }
+            });
+        }
+    };
+}
+
+//]]>
+</script>
+
+<div class="page-title">
+	<h2><?php echo $this->__('Find a store')?></h2>
+</div>
+<?php if ($_showSearch): ?>
+<form id="store_locator_form" onsubmit="return false">
+	<fieldset class="group-select">
+		<ul>
+			<li>
+                <label for="address"><?php echo $this->__('Address')?></label><br/>
+			    <input type="text" class="input-text" id="address" name="address" style="width:300px;"/>
+            </li>
+			<li>
+				<div class="input-box" style="width:95px;">
+				    <label for="radius"><?php echo $this->__('Radius')?></label><br/>
+				    <select id="radius" name="radius" style="width:80px;">
+				        <option value="25" selected>25</option>
+				        <option value="100">100</option>
+				        <option value="200">200</option>
+				    </select>
+                </div>
+            </li>
+        </ul>
+        <br/>
+        <input type="submit" class="form-button" value="<?php echo $this->__('Submit')?>" />
+        <input type="reset" class="form-button" value="<?php echo $this->__('Reset')?>" />
+    </fieldset>
+</form>
+<?php endif ?>
+
+<div id="storelocator-results" <?php if (!$_showMap): ?>style="visibility:hidden;"<?php endif ?>>
+	<div id="storelocator-container">
+    	<div id="mapsearch"></div>
+		<table>
+		<tbody>
+		  <tr id="cm_mapTR">
+			<td width="200" valign="top"><div id="sidebar"></div></td>
+			<td><div id="map"></div> </td>
+		  </tr>
+		</tbody>
+	  </table>
+	</div>
+</div>
+
+<script type="text/javascript">
+var ex;
+(function(){
+    var storeLocator = new TechnoozeStores({
+        mapEl: $('map'),
+        sidebarEl: $('mapsearch'),
+        searchUrl: '<?php echo $this->getUrl('stores/location/search')?>',
+        generateSidebarHtml: function(m) {
+            return '<b>' + m.title + '</b> (' + parseFloat(m.distance).toFixed(1) + ' ' + m.units + ')<br/>'
+                + m.address_display.replace(/\n/, '<br/>');
+        },
+        generateMarkerHtml: function(m) {
+            var url = m.website_url.replace(/\s/,'');
+            return '<b>' + m.title + '</b> <br/>'
+                + m.address_display.replace(/\n/, '<br/>') + '<br/>'
+                + (m.phone.length>5 ? m.phone + '<br/>' : '')
+                + '<br/>'
+                + (url.length>5 ? '<a href="' + (url.match(/@/) ? 'mailto:' : '') + url + '"><strong>' + url + '</strong></a><br/>' : '')
+                + '<p>' + m.notes + '</p>';
+        }
+    });
+
+    Event.observe(window, 'load', function () {
+        storeLocator.load();
+
+<?php $address = Mage::app()->getRequest()->getParam('address'); ?>
+
+<?php if ($address): ?>
+        $('storelocator-results').style.visibility = 'visible';
+        storeLocator.search('<?php echo addslashes($address) ?>', {
+            radius: '<?php echo addslashes($_defaultRadius) ?>'
+            /*, type: $('product_type').value*/
+        });
+
+<?php elseif ($_defaultLocation): ?>
+        $('storelocator-results').style.visibility = 'visible';
+        storeLocator.search('<?php echo addslashes($_defaultLocation) ?>', {
+            radius: '<?php echo addslashes($_defaultRadius) ?>'
+            /*, type: $('product_type').value*/
+        });
+
+<?php endif ?>
+    });
+
+    Event.observe(window, 'unload', GUnload);
+
+<?php if ($_showSearch): ?>
+    Event.observe($('store_locator_form'), 'submit', function() {
+        $('storelocator-results').style.visibility = 'visible';
+        storeLocator.search($('address').value, {
+            radius: $('radius').value
+            /*, type: $('product_type').value*/
+        });
+    });
+<?php endif ?>
+
+})();
+</script>

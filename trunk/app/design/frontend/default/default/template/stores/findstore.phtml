@@ -1,0 +1,157 @@
+<?php
+/**
+ * Technooze_Stores extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category   Technooze
+ * @package    Technooze_Stores
+ * @copyright  Copyright (c) 2008 Technooze LLC
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/**
+ * @category   Technooze
+ * @package    Technooze_Stores
+ * @author     Technooze <info@technooze.com>
+ */
+?>
+<?php
+$_apiKey = Mage::getStoreConfig('stores/general/google_api_key');
+$_showMap = Mage::getStoreConfig('stores/general/show_map');
+$_showSearch = Mage::getStoreConfig('stores/general/show_search');
+$_defaultLocation = Mage::getStoreConfig('stores/general/default_location');
+$_defaultRadius = Mage::getStoreConfig('stores/general/default_radius');
+
+$collection = $this->findStoreLocations();
+//print_r($collection->printLogQuery(true));
+$storesLocations = $collection->getData();
+?>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=<?php echo $_apiKey ?>&sensor=true"></script>
+<?php
+$country = Mage::app()->getRequest()->getParam('country');
+$address = Mage::app()->getRequest()->getParam('address');
+$radius = Mage::app()->getRequest()->getParam('radius');
+
+if(!empty($address) && empty($country)){
+    $_defaultCountry = Mage::getStoreConfig('stores/general/default_country');
+    if($_defaultCountry){
+        $country = Mage::getModel('directory/country')->loadByCode($_defaultCountry);
+        $_defaultCountry = $country->getName();
+    }
+    $address .= ', ' . $_defaultCountry;
+}
+?>
+
+<div class="page-title">
+	<h2><?php echo $this->__('Find a store')?></h2>
+</div>
+
+<?php if($address):	?>
+	<p class="intro"><?php echo $this->__('Search Results for \'%s\'', $address)?></p>
+<?php endif; ?>
+
+<div id="storelocator-container">
+    <?php if(!empty($storesLocations)): ?>
+    <div id="map" style="width:1040px; height:360px; border: 1px solid #dedede;"></div>
+    <p class="fclear">&nbsp;</p>
+    <ul class="store_locations">
+       <li class="table-heading odd">
+           <span class="col col1">Suburb</span>
+           <span class="col col2">Address</span>
+           <span class="col col3">Contact Number</span>
+           <span class="col col4">&nbsp;</span>
+       </li>
+        <?php foreach($storesLocations as $k => $v): ?>
+           <li class="table-data <?php echo ($k %2 == 0) ? 'even' : 'odd' ?>" onclick="window.top.location.href='<?php echo $this->getUrl() . $v['url_key']; ?>.html'">
+               <span class="col col1"><?php echo $v['suburb']; ?></span>
+               <span class="col col2"><?php echo nl2br($v['address_display']); ?></span>
+               <span class="col col3"><?php echo $v['phone']; ?></span>
+               <span class="col col4"><?php echo round($v['distance'], 2); ?>km</span>
+           </li>
+        <?php endforeach; ?>
+    </ul>
+   <?php else: ?>
+    <div class="no-stores">
+           <p>
+               Sorry, there are no stores located near that address. Call us on 1300 xxx xxx.
+               <br />
+               One of our experienced customer service representatives will be happy to help you with your enquiry.
+           </p>
+       </div>
+   <?php endif; ?>
+</div>
+
+<?php
+if(empty($storesLocations)){
+    // show stores not found msg
+}else{
+    $map = $storesLocations[0];
+?>
+<script type="text/javascript">
+    //<![CDATA[
+    var map;
+    var markers = [];
+    var infoWindow = null;
+    var locationSelect;
+
+    function load() {
+        var latlng = new google.maps.LatLng(<?php echo $map['latitude'] ?>, <?php echo $map['longitude'] ?>);
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: latlng,
+            zoom: 16,
+            mapTypeId: 'roadmap',
+            mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU}
+        });
+
+        //infoWindow = new google.maps.InfoWindow({maxWidth: 200});
+        setMarkers();
+        infoWindow = new google.maps.InfoWindow({content: "loading..."});
+    }
+
+    function setMarkers() {
+        //var infoWindows = Array();
+        var html = '';
+        var marker = null;
+        <?php
+        if(!empty($storesLocations)){
+            foreach($storesLocations as $k => $map){
+                ?>
+                html = '<div id="content-<?php echo $k ?>">'+
+                '<h2 id="firstHeading-<?php echo $k ?>" class="firstHeading"><a title="View <?php echo $map['title']; ?> details" href="<?php echo $this->getUrl() . $map['url_key']; ?>.html" class="cta"><?php echo $map['title']; ?></a></h2>'+
+                '<div id="bodyContent-<?php echo $k ?>">'+
+                '<p><?php echo addslashes(str_replace("\r\n", ' ', nl2br($map['address_display']))) ?></p>'+
+                '</div>'+
+                '</div>';
+
+                marker = new google.maps.Marker(
+                    {
+                        map: map,
+                        position: new google.maps.LatLng(<?php echo $map['latitude'] ?>, <?php echo $map['longitude'] ?>),
+                        title: '<?php echo trim($map['title']) ?>',
+                        icon: '<?php echo $this->getSkinUrl("images/google_map_marker.png"); ?>',
+                        zIndex: <?php echo $k ?>,
+                        content: html,
+                        animation: google.maps.Animation.DROP
+                    }
+                );
+                google.maps.event.addListener(marker, 'click', function() {
+                    infoWindow.setContent(this.content);
+                    infoWindow.open(map, this);
+                });
+                <?php
+            }
+        }
+        ?>
+    }
+
+    //]]>
+    load();
+</script>
+    <?php
+}

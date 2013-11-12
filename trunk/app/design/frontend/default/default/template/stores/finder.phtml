@@ -1,0 +1,55 @@
+<?php
+/**
+ * Technooze_Stores extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category   Technooze
+ * @package    Technooze_Stores
+ * @copyright  Copyright (c) 2008 Technooze LLC
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/**
+ * @category   Technooze
+ * @package    Technooze_Stores
+ * @author     Technooze <info@technooze.com>
+ */
+
+// if we have selected_store in the registry then
+// redirect directly to that store
+$first = Mage::registry('selected_store_location');
+if($first){ ?>
+    window.top.location.href='<?php echo $this->getUrl() . $first['url_key'] ?>.html?distance=<?php echo urlencode(round($first['distance'], 2)); ?>';
+<?php } else { ?>
+<div id="store_search">
+<?php $store_locations = (array)Mage::registry('store_locations'); ?>
+<?php if(!empty($store_locations)): ?>
+	<ul class="dotted_list">
+		<?php foreach($store_locations as $v): ?>
+        <li class="clearer">
+            <h2><a title="View <?php echo $v['title']; ?> details" href="<?php echo $this->getUrl() . $v['url_key']; ?>.html" class="cta"><?php echo $v['title']; ?><span>(<?php echo round($v['distance'], 2); ?>KM)</span></a></h2>
+            <address>
+                <?php echo nl2br($v['address_display']); ?>
+            </address>
+
+            <a title="View <?php echo $v['title']; ?> details" href="<?php echo $this->getUrl() . $v['url_key']; ?>.html" class="cta">View store details</a>
+        </li>
+    	<?php endforeach; ?>
+	</ul>
+<?php else: ?>
+	<div class="no-stores">
+        <p>
+            Sorry, there are no stores located near that address. Call us on 1300 xxx xxx.
+            <br />
+            One of our experienced customer service representatives will be happy to help you with your enquiry.
+        </p>
+    </div>
+<?php endif; ?>
+</div>
+<?php } ?>
