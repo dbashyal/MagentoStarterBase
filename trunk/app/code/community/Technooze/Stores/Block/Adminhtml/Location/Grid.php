@@ -77,6 +77,11 @@ class Technooze_Stores_Block_Adminhtml_Location_Grid extends Mage_Adminhtml_Bloc
             'header'    => Mage::helper('stores')->__('Fax'),
             'index'     => 'fax',
         ));
+        
+        /*$this->addColumn('hours', array(
+            'header'    => Mage::helper('stores')->__('Opening Hours'),
+            'index'     => 'hours',
+        ));*/
 
         $this->addColumn('longitude', array(
             'header'    => Mage::helper('stores')->__('Longitude'),
@@ -94,6 +99,16 @@ class Technooze_Stores_Block_Adminhtml_Location_Grid extends Mage_Adminhtml_Bloc
             'type'      => 'number',
         ));
 
+        /*$this->addColumn('location_type', array(
+            'header'    => Mage::helper('stores')->__('Location Type'),
+            'index'     => 'location_type',
+            'type'      => 'options',
+            'options'    => array(
+                Technooze_Stores_Model_LocationType::STOCKIST  => Mage::helper('stores')->__('Stockist'),
+                Technooze_Stores_Model_LocationType::MARKET    => Mage::helper('stores')->__('Market'),
+                Technooze_Stores_Model_LocationType::EVENT     => Mage::helper('stores')->__('Event')
+            )
+        ));*/
         Mage::dispatchEvent('stores_adminhtml_grid_prepare_columns', array('block'=>$this));
 
         return parent::_prepareColumns();

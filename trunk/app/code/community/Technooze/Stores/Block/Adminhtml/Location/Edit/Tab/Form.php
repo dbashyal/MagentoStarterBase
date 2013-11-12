@@ -64,6 +64,17 @@ class Technooze_Stores_Block_Adminhtml_Location_Edit_Tab_Form extends Mage_Admin
             ),
         ));
 
+        /*$fieldset->addField('location_type', 'select', array(
+            'label'     => Mage::helper('stores')->__('Location Type'),
+            'title'     => Mage::helper('stores')->__('Location Type'),
+            'name'      => 'location_type',
+            'required'  => true,
+            'options'   => array(
+                0 => Mage::helper('stores')->__('Stockist'),
+                1 => Mage::helper('stores')->__('Market'),
+                2 => Mage::helper('stores')->__('Event'),
+            ),
+        ));*/
         $fieldset = $form->addFieldset('location_form', array(
             'legend'=>Mage::helper('stores')->__('Store Location Info')
         ));
@@ -121,9 +132,48 @@ class Technooze_Stores_Block_Adminhtml_Location_Edit_Tab_Form extends Mage_Admin
             'name'      => 'hours',
             'style'     => 'height:125px',
             'label'     => Mage::helper('stores')->__('Opening Hours'),
-			'note'      => Mage::helper('stores')->__('add new lines as <strong>Monday | 9am-5.30pm</strong>'),
+			'note'      => Mage::helper('stores')->__('Set Opening Hours as <strong>Monday | 9am-5.30pm</strong> with "|" as separator'),
         ));
 
+        /*$fieldset->addField('month', 'select', array(
+            'label'     => Mage::helper('stores')->__('Month'),
+            'title'     => Mage::helper('stores')->__('Month'),
+            'name'  => 'month',
+            'label'     => Mage::helper('stores')->__('Month'),
+            'options'   => array(
+                '01'   => Mage::helper('stores')->__('January'),
+                '02'  => Mage::helper('stores')->__('February'),
+                '03'     => Mage::helper('stores')->__('March'),
+                '04'     => Mage::helper('stores')->__('April'),
+                '05'       => Mage::helper('stores')->__('May'),
+                '06'      => Mage::helper('stores')->__('June'),
+                '07'      => Mage::helper('stores')->__('July'),
+                '08'    => Mage::helper('stores')->__('August'),
+                '09' => Mage::helper('stores')->__('September'),
+                '10'   => Mage::helper('stores')->__('October'),
+                '11'  => Mage::helper('stores')->__('November'),
+                '12'  => Mage::helper('stores')->__('December')
+            ),
+        ));
+        
+        $fieldset->addField('year', 'select', array(
+            'label'     => Mage::helper('stores')->__('Year'),
+            'title'     => Mage::helper('stores')->__('Year'),
+            'name'  => 'year',
+            'label'     => Mage::helper('stores')->__('Year'),
+            'options'   => $this->_getYear()
+        ));
+        
+        
+        $this->setChild('form_after', $this->getLayout()
+            ->createBlock('adminhtml/widget_form_element_dependence')
+                ->addFieldMap('location_type', 'location_type')
+                ->addFieldMap('month', 'month')
+                ->addFieldMap('year', 'year')
+                ->addFieldDependence('month', 'location_type', array('1', '2'))
+                ->addFieldDependence('year', 'location_type', array('1', '2'))
+                
+        );*/
         $fieldset->addField('notes', 'textarea', array(
             'name'      => 'notes',
             'style'     => 'height:50px',
@@ -232,5 +282,19 @@ class Technooze_Stores_Block_Adminhtml_Location_Edit_Tab_Form extends Mage_Admin
         {
             return 'Not yet uploaded!';
         }
+    }
+    
+    private function _getYear() {
+        
+        $years = array();
+        
+        $year = date("Y", Mage::getModel('core/date')->timestamp(time()));
+        
+        for($i = 0; $i < 10; $i++){
+            $years[$year] = $year;
+            $year++;
+        }
+        
+        return $years;
     }
 }

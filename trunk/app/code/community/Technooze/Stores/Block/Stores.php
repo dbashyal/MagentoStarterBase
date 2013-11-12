@@ -90,7 +90,11 @@ class Technooze_Stores_Block_Stores extends Mage_Core_Block_Template
                     $units
                 )
                 ->addFieldToFilter('status', 1)
-                ->addFieldToFilter('stores', Mage::app()->getStore()->getStoreId())
+                ->addFieldToFilter('stores', array(
+                        '0',
+                        Mage::app()->getStore()->getStoreId()
+                    )
+                  )
                 //->addProductTypeFilter($this->getRequest()->getParam('type'))
             ;
             if($this->_redirectToFirstResult){
@@ -105,5 +109,56 @@ class Technooze_Stores_Block_Stores extends Mage_Core_Block_Template
         }
 
          return $collection;
+    }
+    
+    public function getAvailableMonths($id) {
+        
+        $_availableMonths = array();
+        
+        $collection = Mage::getModel('stores/location')->getCollection()
+                    ->addFieldToFilter('status', 1)
+                    ->addFieldToFilter('stores', array('0', Mage::app()->getStore()->getStoreId()))
+                    ->addFieldToFilter('location_type', $id)
+                    ->setOrder('year', 'ASC')
+                    ->setOrder('month', 'ASC')
+                    ->load();
+        $x = 0;
+        foreach($collection as $date) {
+            $m = $date->getMonth();
+            if($m == '01'){
+              $month = "January";
+            } elseif ($m == '02') {
+              $month = "February";
+            } elseif ($m == '03') {
+              $month = "March";
+            } elseif ($m == '04') {
+              $month = "April";
+            } elseif ($m == '05') {
+              $month = "May";
+            } elseif ($m == '06') {
+              $month = "June";
+            } elseif ($m == '07') {
+              $month = "July";
+            } elseif ($m == '08') {
+              $month = "August";
+            } elseif ($m == '09') {
+              $month = "September";
+            } elseif ($m == '10') {
+              $month = "October";
+            } elseif ($m == '11') {
+              $month = "November";
+            } elseif ($m == '12') {
+              $month = "December";
+            } else {
+              $month = '';
+            }
+
+            $_date = $this->__('%s, %s', $month, $date->getYear());
+            $_key = $this->__('%s, %s', $date->getMonth(), $date->getYear());
+            $_availableMonths[$_key] = $_date;
+            $x++;
+        }
+
+        return $_availableMonths;
     }
 }

@@ -110,7 +110,6 @@ class Technooze_Stores_Model_Location extends Mage_Core_Model_Abstract
             return false;
         }
 
-        $request_path = $key . '.html';
         $id_path = 'stores/' . $id;
         $target_path = 'stores/index/selected/id/' . $id . '/';
         $options = '';
@@ -119,9 +118,14 @@ class Technooze_Stores_Model_Location extends Mage_Core_Model_Abstract
         // delete previous record
         $collection = Mage::getModel('core/url_rewrite')->getCollection();
         $collection->addFieldToFilter('id_path', $id_path);
+        $collection->addFieldToFilter('store_id', $store_id);
         foreach($collection as $old){
             $old->delete();
         }
+
+        $key = $this->getUrlKey($key, $id);
+
+        $request_path = $key . '.html';
 
         // insert new record
         $model = Mage::getModel('core/url_rewrite')->load(0);
@@ -137,7 +141,7 @@ class Technooze_Stores_Model_Location extends Mage_Core_Model_Abstract
                 $model->setIsSystem(0);
             }
             if (empty($store_id)) {
-                $store_id = Mage::app()->getStore()->getStoreId();
+                $store_id = 0;//Mage::app()->getStore()->getStoreId(); // shouldn't use this in multi-store
             }
             $model->setStoreId($store_id);
 

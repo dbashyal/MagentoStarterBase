@@ -173,4 +173,151 @@ class Technooze_Stores_LocationController extends Mage_Core_Controller_Front_Act
 
         $this->getResponse()->setHeader('Content-Type', 'text/xml', true)->setBody($dom->saveXml());
     }
+    
+     public function findStoreAction(){
+         
+         
+         $result = array();
+         
+         $address = $this->getRequest()->getParam('address');
+         $country_code = $this->getRequest()->getParam('country');
+         $suburb = $this->getRequest()->getParam('suburb');
+         $location_type = $this->getRequest()->getParam('location_type');
+         $date = $this->getRequest()->getParam('month');
+         
+         $country = Mage::app()->getLocale()->getCountryTranslation($country_code);
+         
+         $model = Mage::getModel('stores/location');
+         $model->setAddress($this->__('%s, %s', $address . $suburb, $country));
+                  
+         $model->fetchCoordinates();
+         $lat = $model->getLatitude();
+         $lng = $model->getLongitude();
+
+        try {
+            
+            $num = (int)Mage::getStoreConfig('stores/general/num_results');
+            $units = Mage::getStoreConfig('stores/general/distance_units');
+            $collection = Mage::getModel('stores/location')->getCollection()
+                ->addFieldToFilter('status', 1)
+                ->addFieldToFilter('stores', array('0', Mage::app()->getStore()->getStoreId()));
+            
+            if($location_type == Technooze_Stores_Model_LocationType::STOCKIST) {
+                if($country_code == "AU") {
+                    if($suburb){
+                        $collection->addFieldToFilter('suburb', $suburb);
+                    }
+					
+					$collection->addAreaFilter($lat, $lng, 50, $units);
+					
+                } else {
+                    $collection->addAreaFilter($lat, $lng, 10000, $units);
+                    $collection->addFieldToFilter('country', $country_code);
+                }
+            } elseif ($location_type == Technooze_Stores_Model_LocationType::MARKET || $location_type == Technooze_Stores_Model_LocationType::EVENT) {
+                
+                if($address)
+                    $collection->addAreaFilter($lat, $lng, 50, $units);
+                else
+                    $collection->addAreaFilter($lat, $lng, 100000, $units);
+                
+                if($suburb){
+                    $collection->addFieldToFilter('suburb', $suburb);
+                }
+                
+                if($date){
+                    $date = split(', ', $date);
+                    $collection->addFieldToFilter('month', $date[0]);
+                    $collection->addFieldToFilter('year', $date[1]);
+                }
+                
+                $collection->addFieldToFilter('country', $country_code);
+                
+            }
+
+            $collection->addFieldToFilter('location_type', $location_type);
+            $collection->getSelect()->limit($num);
+            
+            foreach($collection as $k => $v){
+                                
+                $result[$k]['stores_id']        = $v->getStoresId();
+                $result[$k]['stores']           = $v->getStores();
+                $result[$k]['status']           = $v->getStatus();
+                $result[$k]['title']            = $v->getTitle();
+                $result[$k]['address']          = $v->getAddress();
+                $result[$k]['suburb']           = $v->getSuburb();
+                $result[$k]['country']          = $v->getCountry();
+                $result[$k]['latitude']         = $v->getLatitude();
+                $result[$k]['longitude']        = $v->getLongitude();
+                $result[$k]['address_display']  = $v->getAddressDisplay();
+                $result[$k]['notes']            = $v->getNotes();
+                $result[$k]['hours']            = $v->getHours();
+                $result[$k]['email']            = $v->getEmail();
+                $result[$k]['website_url']      = $v->getWesiteUrl();
+                $result[$k]['phone']            = $v->getPhone();
+                $result[$k]['fax']              = $v->getFax();
+                $result[$k]['product_types']    = $v->getProductTypes();
+                $result[$k]['logo_small']       = $v->getLogoSmall();
+                $result[$k]['logo_medium']      = $v->getLogoMedium();
+                $result[$k]['logo_large']       = $v->getLogoLarge();
+                $result[$k]['store_photo']      = $v->getStorePhoto();
+                $result[$k]['store_pdf']        = $v->getStorePdf();
+                $result[$k]['distance']         = $v->getDistance();
+            }
+            
+        } catch (Exception $e) {
+            
+            $result['error'] = $this->__('There has been an error searching.');
+        }
+
+        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+    }
+    
+    public function findAllInternationalStoreAction(){
+         
+         
+        $result = array();
+          
+        try {
+            $collection = Mage::getModel('stores/location')->getCollection()
+                ->addFieldToFilter('status', 1)
+                ->addFieldToFilter('stores', array('0', Mage::app()->getStore()->getStoreId()))
+                ->addFieldToFilter('country', array('neq' => 'AU'))
+                ->addFieldToFilter('location_type', Technooze_Stores_Model_LocationType::STOCKIST);
+            
+            foreach($collection as $k => $v){
+                
+                $country = Mage::app()->getLocale()->getCountryTranslation($v->getCountry());
+                
+                $result[$country][$k]['stores_id']        = $v->getStoresId();
+                $result[$country][$k]['stores']           = $v->getStores();
+                $result[$country][$k]['status']           = $v->getStatus();
+                $result[$country][$k]['title']            = $v->getTitle();
+                $result[$country][$k]['address']          = $v->getAddress();
+                $result[$country][$k]['suburb']           = $v->getSuburb();
+                $result[$country][$k]['latitude']         = $v->getLatitude();
+                $result[$country][$k]['longitude']        = $v->getLongitude();
+                $result[$country][$k]['address_display']  = $v->getAddressDisplay();
+                $result[$country][$k]['notes']            = $v->getNotes();
+                $result[$country][$k]['hours']            = $v->getHours();
+                $result[$country][$k]['email']            = $v->getEmail();
+                $result[$country][$k]['website_url']      = $v->getWesiteUrl();
+                $result[$country][$k]['phone']            = $v->getPhone();
+                $result[$country][$k]['fax']              = $v->getFax();
+                $result[$country][$k]['product_types']    = $v->getProductTypes();
+                $result[$country][$k]['logo_small']       = $v->getLogoSmall();
+                $result[$country][$k]['logo_medium']      = $v->getLogoMedium();
+                $result[$country][$k]['logo_large']       = $v->getLogoLarge();
+                $result[$country][$k]['store_photo']      = $v->getStorePhoto();
+                $result[$country][$k]['store_pdf']        = $v->getStorePdf();
+                $result[$country][$k]['distance']         = $v->getDistance();
+            }
+            
+        } catch (Exception $e) {
+            
+            $result['error'] = $this->__('There has been an error searching.');
+        }
+
+        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+    }
 }
