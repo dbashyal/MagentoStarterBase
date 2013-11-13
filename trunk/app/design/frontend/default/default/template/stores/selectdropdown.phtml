@@ -1,0 +1,7 @@
+<option value="">Choose a store</option>
+    <?php
+$stores = $this->getStores();
+foreach($stores as $v):
+    ?>
+  <option><?php echo $v['title'] ?></option>
+<?php endforeach;

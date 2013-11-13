@@ -38,6 +38,16 @@
         </reference>
     </stores_index_noroute>
 
+    <stores_index_contactstores translate="label">
+        <label>Contact Stores</label>
+        <reference name="root">
+            <action method="setTemplate"><template>stores/contentonly.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="stores/contacts" template="stores/selectdropdown.phtml" name="stores.map" />
+        </reference>
+    </stores_index_contactstores>
+
     <stores_index_defaultnoroute>
         <remove name="right"/>
         <remove name="left"/>

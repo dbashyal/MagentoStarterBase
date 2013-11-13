@@ -55,7 +55,7 @@ $map = (array)Mage::registry('store_map');
     </div>
     <ul class="two_columns" id="store_detail">
         <li class="right">
-            <h6 class="address"><?php echo nl2br(str_replace(',', ', ',$map['address']));?></h6>
+            <h6 class="address"><?php echo nl2br(str_replace(',', ', ',$map['address_display']));?></h6>
             <?php if(!empty($map['phone'])){ ?><h6 class="phone"><?php echo $map['phone'] ?></h6><?php } ?>
             <?php if(!empty($map['fax'])){ ?><h6 class="fax"><?php echo $map['fax'] ?></h6><?php } ?>
             <h6 id="store_hours_title">Opening Hours</h6>
