@@ -1,4 +1,4 @@
-trunk/.idea/
+.idea/
 trunk/app/etc/local.xml
 trunk/media/*
 trunk/var/*
