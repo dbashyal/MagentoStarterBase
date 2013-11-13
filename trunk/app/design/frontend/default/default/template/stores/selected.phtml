@@ -43,7 +43,7 @@ $map = (array)Mage::registry('store_map');
         </div>
         <div class="store-locator">
             <form id="store-quick-search-form" action="<?php echo $this->getUrl('') ?>stores/location/find/">
-                <input id="address" type="text" name="address" value="<?php echo $this->helper('thelper')->quoteEscape($this->getRequest()->getParam('store-search')) ?>" class="textbox fleft" placeholder="<?php echo $this->__("Postcode / Suburb") ?>" />
+                <input id="address" type="text" name="address" value="<?php echo $this->quoteEscape($this->getRequest()->getParam('store-search')) ?>" class="textbox fleft" placeholder="<?php echo $this->__("Postcode / Suburb") ?>" />
                 <button type="submit" id="search-btn" title="<?php echo $this->__('Search') ?>" class="button fleft"><span><span>Find Your Local Store</span></span></button>
             </form>
         </div>

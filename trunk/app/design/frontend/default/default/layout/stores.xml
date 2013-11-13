@@ -85,7 +85,7 @@
         </reference>
 
         <reference name="content">
-            <block type="core/template" name="side" template="page/html/side.phtml" /><!-- add sidebar item here if any -->
+            <!--<block type="core/template" name="side" template="page/html/side.phtml" />--><!-- add sidebar item here if any -->
             <block type="core/template" template="stores/selected.phtml" name="stores.map" />
         </reference>
     </stores_index_selected>

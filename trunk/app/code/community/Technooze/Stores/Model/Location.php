@@ -118,7 +118,7 @@ class Technooze_Stores_Model_Location extends Mage_Core_Model_Abstract
         // delete previous record
         $collection = Mage::getModel('core/url_rewrite')->getCollection();
         $collection->addFieldToFilter('id_path', $id_path);
-        $collection->addFieldToFilter('store_id', $store_id);
+        //$collection->addFieldToFilter('store_id', $store_id);
         foreach($collection as $old){
             $old->delete();
         }
@@ -127,33 +127,43 @@ class Technooze_Stores_Model_Location extends Mage_Core_Model_Abstract
 
         $request_path = $key . '.html';
 
-        // insert new record
-        $model = Mage::getModel('core/url_rewrite')->load(0);
+        $rewriteStores = array();
+        if(!empty($store_id)){
+            $rewriteStores[$store_id] = $store_id;
+        }else{
+            $allStores = Mage::app()->getStores();
+            foreach($allStores as $_store){
+                $rewriteStores[$_store->getData('store_id')] = $_store->getData('store_id');
+            }
+        }
 
         try {
-            $model->setIdPath($id_path)
-                ->setTargetPath($target_path)
-                ->setOptions($options)
-                ->setDescription($description)
-                ->setRequestPath($request_path);
+            foreach($rewriteStores as $store_id){
+                // insert new record
+                $model = Mage::getModel('core/url_rewrite')->load(0);
+                $model->setIdPath($id_path)
+                    ->setTargetPath($target_path)
+                    ->setOptions($options)
+                    ->setDescription($description)
+                    ->setRequestPath($request_path);
 
-            if (!$model->getId()) {
-                $model->setIsSystem(0);
+                if (!$model->getId()) {
+                    $model->setIsSystem(0);
+                }
+                if (empty($store_id)) {
+                    $store_id = 0;//Mage::app()->getStore()->getStoreId(); // shouldn't use this in multi-store
+                }
+                $model->setStoreId($store_id);
+
+                // save and redirect
+                $model->save();
             }
-            if (empty($store_id)) {
-                $store_id = 0;//Mage::app()->getStore()->getStoreId(); // shouldn't use this in multi-store
-            }
-            $model->setStoreId($store_id);
-
-            // save and redirect
-            $model->save();
-
-            return $request_path;
         }
         catch (Exception $e) {
             Mage::throwException(Mage::helper('stores')->__($e->getMessage()));
             return false;
         }
+        return $request_path;
     }
 
     public function fetchCoordinates()

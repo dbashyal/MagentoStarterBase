@@ -49,7 +49,7 @@ class Technooze_Stores_IndexController extends Technooze_Stores_LocationControll
         $collection
             ->addFieldToFilter('stores_id', $store_location_id)
             ->addFieldToFilter('status', 1)
-            ->addFieldToFilter('stores', Mage::app()->getStore()->getStoreId())
+            ->addFieldToFilter('stores', array('0', Mage::app()->getStore()->getStoreId()))
         ;
 
         // If no stores found, display error
@@ -163,11 +163,7 @@ class Technooze_Stores_IndexController extends Technooze_Stores_LocationControll
 		$collection = Mage::getModel('stores/location')->getCollection();
         $collection
             ->addFieldToFilter('status', 1)
-            ->addFieldToFilter('stores', array(
-                  '0',
-                  Mage::app()->getStore()->getStoreId()
-              )
-            )
+            ->addFieldToFilter('stores', array('0', Mage::app()->getStore()->getStoreId()))
         ;
         $collection->getSelect()->order('title ASC');//->where('stores_id=' . $store_location_id);
 

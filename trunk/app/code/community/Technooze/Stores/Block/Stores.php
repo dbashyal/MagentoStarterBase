@@ -90,11 +90,7 @@ class Technooze_Stores_Block_Stores extends Mage_Core_Block_Template
                     $units
                 )
                 ->addFieldToFilter('status', 1)
-                ->addFieldToFilter('stores', array(
-                        '0',
-                        Mage::app()->getStore()->getStoreId()
-                    )
-                  )
+                ->addFieldToFilter('stores', array('0', Mage::app()->getStore()->getStoreId()))
                 //->addProductTypeFilter($this->getRequest()->getParam('type'))
             ;
             if($this->_redirectToFirstResult){

@@ -66,7 +66,7 @@ class Technooze_Stores_LocationController extends Mage_Core_Controller_Front_Act
                     $this->getRequest()->getParam('units', $units)
                 )
                 ->addFieldToFilter('status', 1)
-                ->addFieldToFilter('stores', Mage::app()->getStore()->getStoreId())
+                ->addFieldToFilter('stores', array('0', Mage::app()->getStore()->getStoreId()))
                 //->addProductTypeFilter($this->getRequest()->getParam('type'))
             ;
 
@@ -148,7 +148,7 @@ class Technooze_Stores_LocationController extends Mage_Core_Controller_Front_Act
                     $this->getRequest()->getParam('units', $units)
                 )
                 ->addFieldToFilter('status', 1)
-                ->addFieldToFilter('stores', Mage::app()->getStore()->getStoreId())
+                ->addFieldToFilter('stores', array('0', Mage::app()->getStore()->getStoreId()))
                 //->addProductTypeFilter($this->getRequest()->getParam('type'))
             ;
 
