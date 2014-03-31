@@ -44,6 +44,13 @@ class Technooze_Tpoll_Block_Poll
      */
     protected $_pollModel;
 
+    /**
+     * Poll id
+     *
+     * @var int
+     */
+    protected $_pollId = 0;
+
 
     /**
      * Initialization
@@ -98,7 +105,6 @@ class Technooze_Tpoll_Block_Poll
         );
     }
 
-
     /**
      * Produces poll html
      *
@@ -106,6 +112,14 @@ class Technooze_Tpoll_Block_Poll
      */
     protected function _toHtml()
     {
+        /** @var $coreSessionModel Mage_Core_Model_Session */
+        $coreSessionModel = Mage::getSingleton('core/session');
+        $justVotedPollId = $coreSessionModel->getJustVotedPoll();
+        if ($justVotedPollId && !$this->_pollModel->isVoted($justVotedPollId)) {
+            $this->_pollModel->setVoted($justVotedPollId);
+        }
+        $coreSessionModel->setJustVotedPoll(false);
+
         $html = '';
         $config = $this->getData('enabled_poll');
         if (empty($config)) {
@@ -114,12 +128,18 @@ class Technooze_Tpoll_Block_Poll
         $polls = explode(',', $config);
         $list = array();
         foreach ($polls as $poll) {
+            $this->_pollId = $poll;
             $item = $this->getPollData($poll);
             if ($item) {
                 $list[] = $item;
             }
         }
         $this->assign('polls', $list);
+
+        if ($this->_pollModel->isVoted($this->_pollId) === true || $justVotedPollId) {
+            $this->setTemplate('technooze/tpoll/result.phtml');
+        }
+
         return parent::_toHtml();
     }
 
