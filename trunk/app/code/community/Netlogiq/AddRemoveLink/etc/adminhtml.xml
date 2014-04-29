@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config>
+	<acl>
+		<resources>
+			<admin>
+				<children>
+					<system>
+						<children>
+							<config>
+								<children>
+									<addremovelink translate="title" module="addremovelink">
+										<title>Adauga link la atribute</title>
+										<sort_order>0</sort_order>
+									</addremovelink>
+								</children>
+							</config>
+						</children>
+					</system>
+				</children>
+			</admin>
+		</resources>
+	</acl>
+</config>

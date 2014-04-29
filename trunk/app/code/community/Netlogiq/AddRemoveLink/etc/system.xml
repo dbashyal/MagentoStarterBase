@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<config>
+	<tabs>
+		<netlogiq translate="label" module="addremovelink">
+			<label>netlogiq</label>
+			<sort_order>102</sort_order>
+		</netlogiq>
+	</tabs>
+	<sections>
+		<addremovelink translate="label" module="addremovelink">
+			<label>Add customer navigation</label>
+			<tab>netlogiq</tab>
+			<frontend_type>text</frontend_type>
+			<sort_order>2</sort_order>
+			<show_in_default>1</show_in_default>
+			<show_in_website>1</show_in_website>
+			<show_in_store>1</show_in_store>
+			<groups>
+				<addremovelink translate="label">
+					<label>Add customer navigation</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>1</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<fields>
+						<lista_atribute translate="label">
+							<label>Add customer navigation</label>
+							<frontend_type>multiselect</frontend_type>
+							<source_model>Netlogiq_AddRemoveLink_Model_Source</source_model>
+							<sort_order>2</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+							<comment>Add customer navigation</comment>
+						</lista_atribute>
+						<lista_atribute_de_sters translate="label">
+							<label>Remove basic customer navigation</label>
+							<frontend_type>multiselect</frontend_type>
+							<source_model>Netlogiq_AddRemoveLink_Model_Source_Remove</source_model>
+							<sort_order>2</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+							<comment>Remove basic customer navigation</comment>
+						</lista_atribute_de_sters>
+					</fields>
+				</addremovelink>
+			</groups>
+		</addremovelink>
+	</sections>
+</config>
